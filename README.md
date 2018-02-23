@@ -9,8 +9,9 @@ The service follows the same structural interaction than the
 but it uses the very tags of the CoNLL 2.0 specification. 
 It lacks several out of scope features, like:
 
-* ignored "type" fixed to "PLAIN_TEXT",
-* ignored "encodingType" fixed to "UTF8",
+* limited to one single language, therefore no auto-detection
+* ignored "type" fixed to "PLAIN_TEXT"
+* ignored "encodingType" fixed to "UTF8"
 * skipped "sentiment" analysis returning "magnitude" and "score" always 0
 * adapted "partOfSpeech" keys and values to the FEATS CoNNL 2.0 convention
 * adapted "dependencyEdge" "label" to the DEPREL CoNNL 2.0 convention
