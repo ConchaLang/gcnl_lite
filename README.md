@@ -142,10 +142,15 @@ version using `models/research/syntaxnet/tensorflow/tensorflow/contrib/rnn/pytho
 You can download up to 60 different language models 
 [here](https://github.com/tensorflow/models/tree/master/research/syntaxnet/g3doc/conll2017).
 All of them must get the mentioned checkpoint file updates.
+In order to ease installation, `lang_models` directory includes 
+six of the nine languages Google Cloud Natural Language offers
+today with the appropriate checkpoint file update already done. 
 
 ## Running the service
 You just have to run `python gcnl_lite.py en <wherever you 
 left your English model>` or changing `en` per `es` if you 
 have downloaded Spanish model. Service keeps on listening 
 at port 7000. Use `curl` or PostMan to invoke the only 
-endpoint `http://localhost:7000/v1/documents:analyzeSyntax`
+endpoint `http://localhost:7000/v1/documents:analyzeSyntax` 
+following the very 
+[Google REST interface](https://cloud.google.com/natural-language/docs/reference/rest/v1/documents/analyzeSyntax).

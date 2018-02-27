@@ -98,6 +98,8 @@ def documents_analyze_syntax():
     but it uses the very tags of the CoNLL 2.0 specification. It lacks several
     out of scope features, like:
 
+    * limited to one single language, therefore no auto-detection
+    * ignored sentence break (periods, full stops...), treating all content as one single phrase
     * ignored "type" fixed to "PLAIN_TEXT",
     * ignored "encodingType" fixed to "UTF8",
     * skipped "sentiment" analysis returning "magnitude" and "score" always 0
