@@ -30,7 +30,7 @@ from syntaxnet import sentence_pb2
 from syntaxnet.ops import gen_parser_ops
 from tensorflow.python.platform import tf_logging as logging
 
-import sys
+import argparse
 from ast import literal_eval
 from flask import Flask, request, jsonify, abort
 
@@ -171,7 +171,7 @@ def documents_analyze_syntax():
         ],
         "language": lang
     }
-    for idx, token in enumerate(parse_tree.token._values):  # TODO find out an unprotected access to values
+    for idx, token in enumerate(parse_tree.token):
         response_token = {
             "text": {
                 "content": token.word,
@@ -192,13 +192,29 @@ if __name__ == '__main__':
     """Start the HTTP RESTful service to mimic the Google Cloud Natural Language syntax analysis
     
     Args:
-        argv[1]: The language label to be accepted in the requests.
-        argv[2]: The base directory where the model resides in a CoNNL 17 structure. 
+        lang: The language label to be accepted in the requests.
+        dir: The base directory where the model resides in a CoNNL 17 structure. 
+
+    Note:
         Checkpoint files need to be updated to Protocol Buffer using TF checkpoint_convert.py
     """
-    lang = sys.argv[1]
-    base_directory = sys.argv[2]
+    parser = argparse.ArgumentParser(
+        description='Mimics part of the Google Cloud Natural Language RESTful API using CoNLL 2017 models.')
+    parser.add_argument("lang", type=str, choices=['en', 'es', 'fr', 'it', 'pt', 'de'],
+                        help='language id')
+    parser.add_argument('dir', type=str,
+                        help="language resources base directory")
+    parser.add_argument('-i', '--ip', type=str, default='0.0.0.0',
+                        help='listen to the IP address')
+    parser.add_argument('-p', '--port', type=int, default=7000,
+                        help='listen to the port number')
+    parser.add_argument('-X', '--debug', action="store_true",
+                        help='debug mode')
+    args = parser.parse_args()
+
+    lang = args.lang
+    base_directory = args.dir
     segmenter_model = load_model(os.path.join(base_directory, 'segmenter'), "spec.textproto", "checkpoint")
     parser_model = load_model(base_directory, "parser_spec.textproto", "checkpoint")
 
-    app.run(debug=True, port=7000, host='0.0.0.0')
+    app.run(host=args.ip, port=args.port, debug=args.debug)
