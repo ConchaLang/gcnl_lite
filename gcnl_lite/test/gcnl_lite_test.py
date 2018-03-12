@@ -40,7 +40,7 @@ REQUEST_2 = """{
 }"""
 
 
-class ServersTestCase(unittest.TestCase):
+class GcnlLiteTestCase(unittest.TestCase):
     def setUp(self):
         gcnl_lite.lang = 'es'
         base_directory = '../../lang_models/es/'
