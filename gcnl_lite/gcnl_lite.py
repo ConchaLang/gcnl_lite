@@ -35,10 +35,12 @@ from ast import literal_eval
 from flask import Flask, request, jsonify, abort
 
 # This is because of the annoying warnings of the standard CPU TF distribution
+app = Flask(__name__)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # No TF optimization warnings
 REPLS = ('attribute { name: ', ''), (' value: ', ': '), (' } ', ',\n')
 lang = ""
-app = Flask(__name__)
+segmenter_model = None
+parser_model = None
 
 
 def load_model(base_dir, master_spec_name, checkpoint_name):
@@ -153,6 +155,17 @@ def documents_analyze_syntax():
     """
     if not request.json and 'document' not in request.json and 'content' not in request.json['document']:
         abort(400)
+    if request.json['document']['language'] != lang:
+        error = jsonify({
+            "error": {
+                "code": 400,
+                "message": "The language {} is not supported for syntax analysis.".format(
+                    request.json['document']['language']),
+                "status": "INVALID_ARGUMENT"
+            }
+        })
+        error.status_code = 400
+        return error
     parse_tree, _ = annotate_text(request.json['document']['content'])
     response = {
         "sentences": [
