@@ -16,9 +16,8 @@
 __author__ = 'Pascual de Juan <pascual.dejuan@gmail.com>'
 __version__ = '1.0'
 
-import gcnl_lite
-import os
 import unittest
+import gcnl_lite
 
 
 REQUEST_1 = """{
@@ -42,18 +41,10 @@ REQUEST_2 = """{
 
 class GcnlLiteTestCase(unittest.TestCase):
     def setUp(self):
-        gcnl_lite.lang = 'es'
-        base_directory = '../../lang_models/es/'
-        gcnl_lite.segmenter_model = gcnl_lite.load_model(
-            os.path.join(base_directory, 'segmenter'),
-            'spec.textproto', 'checkpoint')
-        gcnl_lite.parser_model = gcnl_lite.load_model(
-            base_directory,
-            'parser_spec.textproto', 'checkpoint')
         gcnl_lite.app.config['TESTING'] = True
         self.app = gcnl_lite.app.test_client()
 
-    def test_01_analyze_syntax(self):
+    def test_analyze_syntax(self):
         rv = self.app.post(
             '/v1/documents:analyzeSyntax',
             data=REQUEST_1,
@@ -61,7 +52,8 @@ class GcnlLiteTestCase(unittest.TestCase):
         )
         self.assertTrue(rv.status_code == 200)
         self.assertTrue(b'"label": "root"' in rv.data)
-        # Secondary path (bad request)
+
+    def test_analyze_syntax_2ndp_bad_request(self):
         rv = self.app.post(
             '/v1/documents:analyzeSyntax',
             data=REQUEST_2,
@@ -71,5 +63,6 @@ class GcnlLiteTestCase(unittest.TestCase):
         self.assertTrue(b'The language ja is not supported for syntax analysis.' in rv.data)
 
 
+gcnl_lite.model_setup(base_lang='es', base_directory='../../lang_models/es/')
 if __name__ == '__main__':
     unittest.main()

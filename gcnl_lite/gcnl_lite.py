@@ -201,6 +201,20 @@ def documents_analyze_syntax():
     return jsonify(response)
 
 
+def model_setup(base_lang, base_directory):  # Out of testing
+    global lang
+    global segmenter_model
+    global parser_model
+
+    lang = base_lang
+    segmenter_model = load_model(
+        os.path.join(base_directory, 'segmenter'),
+        'spec.textproto', 'checkpoint')
+    parser_model = load_model(
+        base_directory,
+        'parser_spec.textproto', 'checkpoint')
+
+
 if __name__ == '__main__':
     """Start the HTTP RESTful service to mimic the Google Cloud Natural Language syntax analysis
     
@@ -225,9 +239,5 @@ if __name__ == '__main__':
                         help='debug mode')
     args = parser.parse_args()
 
-    lang = args.lang
-    base_directory = args.dir
-    segmenter_model = load_model(os.path.join(base_directory, 'segmenter'), "spec.textproto", "checkpoint")
-    parser_model = load_model(base_directory, "parser_spec.textproto", "checkpoint")
-
+    model_setup(args.lang, args.dir)
     app.run(host=args.ip, port=args.port, debug=args.debug)
