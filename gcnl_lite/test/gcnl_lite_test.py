@@ -16,6 +16,10 @@
 __author__ = 'Pascual de Juan <pascual.dejuan@gmail.com>'
 __version__ = '1.0'
 
+"""
+Test _only_ the HTTP layer of the Google Cloud Natural Language 'light' RESTful API 
+"""
+
 import unittest
 import gcnl_lite
 
@@ -63,6 +67,6 @@ class GcnlLiteTestCase(unittest.TestCase):
         self.assertTrue(b'The language ja is not supported for syntax analysis.' in rv.data)
 
 
-gcnl_lite.model_setup(base_lang='es', base_directory='../../lang_models/es/')
+gcnl_lite.model_setup(base_lang='es', base_directory='../../lang_models/es/')  # Out of testing.
 if __name__ == '__main__':
     unittest.main()
